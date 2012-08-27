@@ -1,0 +1,7 @@
+# 
+msgid ""
+msgstr "Content-Type: text/plain; charset=utf-8\n"
+
+msgctxt "error:account.invoice.line:"
+msgid "All invoice lines must have at least one tax."
+msgstr "Totes les línies de la factura ha de tenir almenys un impost."

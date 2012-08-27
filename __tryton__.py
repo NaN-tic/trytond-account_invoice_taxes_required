@@ -23,5 +23,6 @@
     'xml': [
         ],
     'translation': [
+        'locale/ca_ES.po',
         ]
 }
