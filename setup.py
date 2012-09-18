@@ -20,7 +20,7 @@ for dep in info.get('depends', []):
 requires.append('trytond >= %s.%s, < %s.%s' %
         (major_version, minor_version, major_version, minor_version + 1))
 
-setup(name='account_invoice_taxes_required',
+setup(name='trytond_account_invoice_taxes_required',
     version=info.get('version', '0.0.1'),
     description=info.get('description', ''),
     author=info.get('author', ''),
@@ -34,11 +34,8 @@ setup(name='account_invoice_taxes_required',
         'trytond.modules.account_invoice_taxes_required.tests',
         ],
     package_data={
-        'trytond.modules.account_invoice_taxes_required': (
-            info.get('xml', []) 
-            + info.get('translation', []) 
-            + ['*.odt', 'icons/*.svg']
-            ),
+        'trytond.modules.account_invoice_taxes_required': info.get('xml', []) \
+                + info.get('translation', []),
         },
     classifiers=[
         'Development Status :: 5 - Production/Stable',
@@ -58,10 +55,10 @@ setup(name='account_invoice_taxes_required',
     license='GPL-3',
     install_requires=requires,
     zip_safe=False,
-    entry_points=("""
+    entry_points="""
     [trytond.modules]
-    account_invoice_taxes_required = trytond.modules."""
-        "account_invoice_taxes_required"),
+    account_invoice_taxes_required = trytond.modules.account_invoice_taxes_required
+    """,
     test_suite='tests',
     test_loader='trytond.test_loader:Loader',
 )
