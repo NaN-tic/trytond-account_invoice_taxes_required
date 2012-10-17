@@ -2,31 +2,30 @@
 #The COPYRIGHT file at the top level of this repository contains 
 #the full copyright notices and license terms.
 import copy
-from trytond.model import ModelView, ModelSQL
 from trytond.pyson import Eval
+from trytond.pool import PoolMeta
 
+__all__ = ['InvoiceLine']
+__metaclass__ = PoolMeta
 
-class InvoiceLine(ModelSQL, ModelView):
-    _name = 'account.invoice.line'
+class InvoiceLine:
+    'Invoice Line'
+    __name__ = 'account.invoice.line'
 
-    def __init__(self):
-        super(InvoiceLine, self).__init__()
-        self._constraints += [
+    @classmethod
+    def __setup__(cls):
+        super(InvoiceLine, cls).__setup__()
+        cls._constraints += [
             ('check_tax_required', 'tax_required')
             ]
-        self.taxes = copy.copy(self.taxes)
-        self.taxes.states = self.taxes.states.copy()
-        self.taxes.states['required'] = Eval('type') == 'line'
-        self._reset_columns()
-        self._error_messages.update({
+        cls.taxes = copy.copy(cls.taxes)
+        cls.taxes.states = cls.taxes.states.copy()
+        cls.taxes.states['required'] = Eval('type') == 'line'
+        cls._error_messages.update({
                 'tax_required': 'All invoice lines must have at least one tax.',
                 })
 
-    def check_tax_required(self, ids):
-        for line in self.browse(ids):
-            if not line.taxes:
-                return False
+    def check_tax_required(self):
+        if not self.taxes:
+            return False
         return True
-
-InvoiceLine()
-

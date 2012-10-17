@@ -1,3 +1,8 @@
+Version 2.6.0 - 2012-10-17
+* Active Record
+* Simplify module information with python configuration
+
+Version 2.4.0 - 2012-08-27
 * Change 2.4.0 version
 * Add es_ES locale
 * Add ca_ES locale
