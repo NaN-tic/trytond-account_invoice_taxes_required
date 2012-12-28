@@ -28,13 +28,13 @@ for dep in info.get('depends', []):
 requires.append('trytond >= %s.%s, < %s.%s' %
         (major_version, minor_version, major_version, minor_version + 1))
 
-setup(name='trytonzz_account_invoice_taxes_required',
+setup(name='nantic_account_invoice_taxes_required',
     version=info.get('version', '0.0.1'),
     description='Account Invoice Taxes Required',
     author='NaN·tic',
     author_email='info@NaN-tic.com',
     url='http://www.nan-tic.com',
-    download_url="https://bitbucket.org/zikzakmedia/trytond-account_invoice_taxes_required",
+    download_url="https://bitbucket.org/trytonspain/trytond-account_invoice_taxes_required",
     package_dir={'trytond.modules.account_invoice_taxes_required': '.'},
     packages=[
         'trytond.modules.account_invoice_taxes_required',
