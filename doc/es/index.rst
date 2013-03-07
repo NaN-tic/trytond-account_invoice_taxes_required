@@ -6,8 +6,8 @@ Este módulo convierte los impuestos de los productos de las líneas de factura
 en un campo obligatorio. Si el producto no dispone de ningún impuesto, se debe
 asignar un impuesto a la linia de la factura.
 
-Módulos que dependen
-====================
+Módulos de los que depende
+==========================
 
 Instalados
 ----------
