@@ -48,111 +48,114 @@ class AccountInvoiceTaxesRequiredTestCase(unittest.TestCase):
         Test taxes required
         '''
         with Transaction().start(DB_NAME, USER, context=CONTEXT):
-            currency = self.currency.create([{
-                    'name': 'A',
-                    'symbol': 'A',
-                    'code': 'A'
-                    }])[0]
-            company = self.company.create([{
-                    'name': 'Company',
-                    'currency': currency,
-                    }])[0]
+            currency, = self.currency.create([{
+                        'name': 'A',
+                        'symbol': 'A',
+                        'code': 'A'
+                        }])
+            party, = self.party.create([{
+                        'name': 'Company',
+                        }])
+            company, = self.company.create([{
+                        'party': party.id,
+                        'currency': currency.id,
+                        }])
             user = self.user.search([('id', '=', USER)])
             self.user.write(user, {
                     'main_company': company,
                     'company': company,
                     })
             self.journal_type.create([{
-                    'name': 'A',
-                    'code': 'A',
-                    }])
-            sequence_id = self.ir_sequence.create([{
-                    'name': 'A',
-                    'code': 'account.journal',
-                    'padding': 3,
-                    'number_increment': 1,
-                    }])[0].id
-            journal = self.journal.create([{
-                    'name': 'A',
-                    'type': 'A',
-                    'sequence': sequence_id,
-                    }])[0]
-            tax = self.account_tax.create([{
-                    'name': 'Tax',
-                    'description': 'Tax',
-                    'sequence': 1,
-                    'type': 'none',
-                    'company': company,
-                    }])[0]
-            term = self.payment_term.create([{
-                    'name': '30 days',
-                    'lines': [
-                        ('create', [{
-                                'sequence': 1,
-                                'type': 'remainder',
-                                'months': 1,
-                                }])]
-                    }])[0]
-            account_type = self.account_type.create([{
-                    'name': 'Payable type',
-                    'company': company,
-                    'display_balance': 'debit-credit',
-                    }])[0]
-            payable_account_id = self.account.create([{
-                    'name': 'Payable',
-                    'code': '',
-                    'kind': 'payable',
-                    'company': company,
-                    'type': account_type,
-                    }])[0].id
-            receivable_account_id = self.account.create([{
-                    'name': 'Receivable',
-                    'code': '',
-                    'kind': 'receivable',
-                    'company': company,
-                    'type': account_type,
-                    }])[0].id
-            party = self.party.create([{
-                    'name': 'Name',
-                    'account_payable': payable_account_id,
-                    'account_receivable': receivable_account_id,
-                    }])[0]
-            revenue_account = self.account.create([{
-                    'name': 'Revenue',
-                    'code': '',
-                    'kind': 'revenue',
-                    'company': company,
-                    'type': account_type,
-                    }])[0]
-            invoice_id = self.invoice.create([{
-                    'party': party.id,
-                    'currency': currency,
-                    'account': receivable_account_id,
-                    'invoice_address': party.addresses[0].id, 
-                    'type': 'out_invoice',
-                    'company': company,
-                    'payment_term': term,
-                    'journal': journal,
-                    }])[0]
+                        'name': 'A',
+                        'code': 'A',
+                        }])
+            sequence, = self.ir_sequence.create([{
+                        'name': 'A',
+                        'code': 'account.journal',
+                        'padding': 3,
+                        'number_increment': 1,
+                        }])
+            journal, = self.journal.create([{
+                        'name': 'A',
+                        'type': 'A',
+                        'sequence': sequence.id,
+                        }])
+            tax, = self.account_tax.create([{
+                        'name': 'Tax',
+                        'description': 'Tax',
+                        'sequence': 1,
+                        'type': 'none',
+                        'company': company,
+                        }])
+            term, = self.payment_term.create([{
+                        'name': '30 days',
+                        'lines': [
+                            ('create', [{
+                                    'sequence': 1,
+                                    'type': 'remainder',
+                                    'months': 1,
+                                    }])]
+                        }])
+            account_type, = self.account_type.create([{
+                        'name': 'Payable type',
+                        'company': company,
+                        'display_balance': 'debit-credit',
+                        }])
+            payable_account, = self.account.create([{
+                        'name': 'Payable',
+                        'code': '',
+                        'kind': 'payable',
+                        'company': company,
+                        'type': account_type,
+                        }])
+            receivable_account, = self.account.create([{
+                        'name': 'Receivable',
+                        'code': '',
+                        'kind': 'receivable',
+                        'company': company,
+                        'type': account_type,
+                        }])
+            party, = self.party.create([{
+                        'name': 'Name',
+                        'account_payable': payable_account.id,
+                        'account_receivable': receivable_account.id,
+                        }])
+            revenue_account, = self.account.create([{
+                        'name': 'Revenue',
+                        'code': '',
+                        'kind': 'revenue',
+                        'company': company,
+                        'type': account_type,
+                        }])
+            invoice, = self.invoice.create([{
+                        'party': party.id,
+                        'currency': currency,
+                        'account': receivable_account.id,
+                        'invoice_address': party.addresses[0].id,
+                        'type': 'out_invoice',
+                        'company': company,
+                        'payment_term': term,
+                        'journal': journal,
+                        }])
             self.invoice_line.create([{
-                    'invoice': invoice_id,
-                    'company': company,
-                    'description': 'A',
-                    'quantity': 1,
-                    'unit_price': 1,
-                    'account': revenue_account,
-                    'taxes': [
-                        ('add', [tax])
-                        ],
-                    }])
+                        'invoice': invoice.id,
+                        'company': company.id,
+                        'description': 'A',
+                        'quantity': 1,
+                        'unit_price': 1,
+                        'account': revenue_account.id,
+                        'taxes': [
+                            ('add', [tax])
+                            ],
+                        }])
             self.assertRaises(Exception, self.invoice_line.create, [{
-                    'invoice': invoice_id,
-                    'company': company,
-                    'description': 'A',
-                    'quantity': 1,
-                    'unit_price': 1,
-                    'account': revenue_account,
-                    }])
+                        'invoice': invoice.id,
+                        'company': company.id,
+                        'description': 'A',
+                        'quantity': 1,
+                        'unit_price': 1,
+                        'account': revenue_account.id,
+                        }])
 
 def suite():
     suite = trytond.tests.test_tryton.suite()
