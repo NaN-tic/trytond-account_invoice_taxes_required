@@ -12,15 +12,13 @@ if os.path.isdir(DIR):
 import unittest
 import doctest
 import trytond.tests.test_tryton
-from trytond.tests.test_tryton import POOL, DB_NAME, USER, CONTEXT, \
-    test_depends
-from trytond.transaction import Transaction
+from trytond.tests.test_tryton import test_depends
 from trytond.backend.sqlite.database import Database as SQLiteDatabase
 
 
 class AccountInvoiceTaxesRequiredTestCase(unittest.TestCase):
     '''
-    Test AccountInvoice module.
+    Test Account Invoice Taxes Required module.
     '''
 
     def setUp(self):
