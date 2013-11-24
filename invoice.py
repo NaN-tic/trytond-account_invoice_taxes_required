@@ -14,7 +14,6 @@ class InvoiceLine:
     @classmethod
     def __setup__(cls):
         super(InvoiceLine, cls).__setup__()
-        cls.taxes.states['required'] = Eval('type') == 'line'
         cls._error_messages.update({
                 'tax_required': ('Missing tax in line "%(line)s" in invoice '
                     '"%(invoice)s".'),
@@ -27,6 +26,8 @@ class InvoiceLine:
             line.check_tax_required()
 
     def check_tax_required(self):
+        if not self.invoice or self.invoice.state in ('draft', 'cancel'):
+            return
         if not self.taxes:
             self.raise_user_error('tax_required', {
                     'line': self.line.rec_name,
