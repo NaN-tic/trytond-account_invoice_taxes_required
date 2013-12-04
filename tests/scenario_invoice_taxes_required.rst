@@ -175,7 +175,7 @@ Create payment term::
     >>> payment_term.lines.append(payment_term_line)
     >>> payment_term.save()
 
-Create invoice::
+Create invoice Without Taxes::
 
     >>> Invoice = Model.get('account.invoice')
     >>> InvoiceLine = Model.get('account.invoice.line')
@@ -200,16 +200,27 @@ Create invoice::
     >>> invoice.total_amount == Decimal(240)
     True
     >>> invoice.save()
+    >>> Invoice.post([invoice.id], config.context)
     Traceback (most recent call last):
         ...
-    UserError: ('UserError', (u'The field "Taxes" on "Invoice Line" is required.', ''))
+    UserError: ('UserError', (u'Missing tax in line "Test" in invoice "1".', ''))
+    >>> invoice.reload()
+    >>> invoice.state
+    u'draft'
+
+ Create invoice With Taxes::
+
+    >>> Invoice = Model.get('account.invoice')
+    >>> InvoiceLine = Model.get('account.invoice.line')
+    >>> invoice = Invoice()
+    >>> invoice.party = party
+    >>> invoice.payment_term = payment_term
+    >>> line = InvoiceLine()
+    >>> invoice.lines.append(line)
+    >>> line.product = product
+    >>> line.quantity = 5
+    >>> invoice.save()
     >>> Invoice.post([invoice.id], config.context)
     >>> invoice.reload()
     >>> invoice.state
     u'posted'
-    >>> invoice.untaxed_amount == Decimal(200)
-    True
-    >>> invoice.tax_amount == Decimal(20)
-    True
-    >>> invoice.total_amount == Decimal(220)
-    True

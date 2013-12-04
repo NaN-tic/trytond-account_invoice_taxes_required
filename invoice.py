@@ -2,10 +2,21 @@
 #The COPYRIGHT file at the top level of this repository contains
 #the full copyright notices and license terms.
 from trytond.pyson import Eval
-from trytond.pool import PoolMeta
+from trytond.pool import Pool, PoolMeta
 
-__all__ = ['InvoiceLine']
+__all__ = ['Invoice', 'InvoiceLine']
 __metaclass__ = PoolMeta
+
+
+class Invoice:
+    __name__ = 'account.invoice'
+
+    @classmethod
+    def validate(cls, invoices):
+        InvoiceLine = Pool().get('account.invoice.line')
+        super(Invoice, cls).validate(invoices)
+        for invoice in invoices:
+            InvoiceLine.validate(invoice.lines)
 
 
 class InvoiceLine:
@@ -30,7 +41,7 @@ class InvoiceLine:
             return
         if not self.taxes:
             self.raise_user_error('tax_required', {
-                    'line': self.line.rec_name,
-                    'invoice': (self.line.invoice.rec_name if self.line.invoice
+                    'line': self.rec_name,
+                    'invoice': (self.invoice.rec_name if self.invoice
                         else '')
                     })
