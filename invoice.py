@@ -37,7 +37,8 @@ class InvoiceLine:
             line.check_tax_required()
 
     def check_tax_required(self):
-        if not self.invoice or self.invoice.state in ('draft', 'cancel'):
+        if not self.invoice or self.invoice.state in ('draft', 'cancel') or \
+                self.type != 'line':
             return
         if not self.taxes:
             self.raise_user_error('tax_required', {

@@ -219,6 +219,10 @@ Create invoice Without Taxes::
     >>> invoice.lines.append(line)
     >>> line.product = product
     >>> line.quantity = 5
+    >>> line = InvoiceLine()
+    >>> invoice.lines.append(line)
+    >>> line.type = 'comment'
+    >>> line.description = 'Test'
     >>> invoice.save()
     >>> Invoice.post([invoice.id], config.context)
     >>> invoice.reload()
