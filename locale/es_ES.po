@@ -3,5 +3,5 @@ msgid ""
 msgstr "Content-Type: text/plain; charset=utf-8\n"
 
 msgctxt "error:account.invoice.line:"
-msgid "All invoice lines must have at least one tax."
-msgstr "Todas las linias de la factura han de contener almenos un impuesto."
+msgid "Missing tax in line \"%(line)s\" in invoice \"%(invoice)s\"."
+msgstr "Falta el impuesto en la línea \"%(line)s\" de la factura \"%(invoice)s\"."
