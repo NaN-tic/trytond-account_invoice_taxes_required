@@ -203,7 +203,7 @@ Create invoice Without Taxes::
     >>> Invoice.post([invoice.id], config.context)
     Traceback (most recent call last):
         ...
-    UserError: ('UserError', (u'Missing tax in line "Test" in invoice "1".', ''))
+    UserError: ('UserError', (u'Missing tax in line "Test" in invoice "1 Party".', ''))
     >>> invoice.reload()
     >>> invoice.state
     u'draft'
