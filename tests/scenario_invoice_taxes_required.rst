@@ -102,25 +102,23 @@ Create invoice Without Taxes::
     >>> invoice = Invoice()
     >>> invoice.party = party
     >>> invoice.payment_term = payment_term
-    >>> line = InvoiceLine()
-    >>> invoice.lines.append(line)
+    >>> line = invoice.lines.new()
     >>> line.product = product
     >>> line.quantity = 5
-    >>> invoice.save()
-    >>> line = InvoiceLine()
-    >>> invoice.lines.append(line)
+    >>> line.unit_price = Decimal(40)
+    >>> line = invoice.lines.new()
     >>> line.account = revenue
     >>> line.description = 'Test'
     >>> line.quantity = 1
     >>> line.unit_price = Decimal(20)
-    >>> invoice.untaxed_amount == Decimal(220)
-    True
-    >>> invoice.tax_amount == Decimal(20)
-    True
-    >>> invoice.total_amount == Decimal(240)
-    True
+    >>> invoice.untaxed_amount
+    Decimal('220.00')
+    >>> invoice.tax_amount
+    Decimal('20.00')
+    >>> invoice.total_amount
+    Decimal('240.00')
     >>> invoice.save()
-    >>> Invoice.post([invoice.id], config.context)
+    >>> invoice.click('post')
     Traceback (most recent call last):
         ...
     UserError: ('UserError', (u'Missing tax in line "Test" in invoice "1 Party".', ''))
@@ -139,12 +137,11 @@ Create invoice Without Taxes::
     >>> invoice.lines.append(line)
     >>> line.product = product
     >>> line.quantity = 5
+    >>> line.unit_price = Decimal(20)
     >>> line = InvoiceLine()
     >>> invoice.lines.append(line)
     >>> line.type = 'comment'
     >>> line.description = 'Test'
-    >>> invoice.save()
-    >>> Invoice.post([invoice.id], config.context)
-    >>> invoice.reload()
+    >>> invoice.click('post')
     >>> invoice.state
     u'posted'
