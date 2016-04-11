@@ -87,18 +87,12 @@ Create product::
 
 Create payment term::
 
-    >>> PaymentTerm = Model.get('account.invoice.payment_term')
-    >>> payment_term = PaymentTerm(name='Term')
-    >>> line = payment_term.lines.new(type='percent', percentage=Decimal(50))
-    >>> delta = line.relativedeltas.new(days=20)
-    >>> line = payment_term.lines.new(type='remainder')
-    >>> delta = line.relativedeltas.new(days=40)
+    >>> payment_term = create_payment_term()
     >>> payment_term.save()
 
 Create invoice Without Taxes::
 
     >>> Invoice = Model.get('account.invoice')
-    >>> InvoiceLine = Model.get('account.invoice.line')
     >>> invoice = Invoice()
     >>> invoice.party = party
     >>> invoice.payment_term = payment_term
@@ -129,17 +123,14 @@ Create invoice Without Taxes::
  Create invoice With Taxes::
 
     >>> Invoice = Model.get('account.invoice')
-    >>> InvoiceLine = Model.get('account.invoice.line')
     >>> invoice = Invoice()
     >>> invoice.party = party
     >>> invoice.payment_term = payment_term
-    >>> line = InvoiceLine()
-    >>> invoice.lines.append(line)
+    >>> line = invoice.lines.new()
     >>> line.product = product
     >>> line.quantity = 5
     >>> line.unit_price = Decimal(20)
-    >>> line = InvoiceLine()
-    >>> invoice.lines.append(line)
+    >>> line = invoice.lines.new()
     >>> line.type = 'comment'
     >>> line.description = 'Test'
     >>> invoice.click('post')
