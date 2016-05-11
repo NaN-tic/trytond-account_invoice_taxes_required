@@ -115,7 +115,7 @@ Create invoice Without Taxes::
     >>> invoice.click('post')
     Traceback (most recent call last):
         ...
-    UserError: ('UserError', (u'Missing tax in line "Test" in invoice "1 Party".', ''))
+    UserError: ('UserError', (u'Missing tax in line "Test" in invoice "1".', ''))
     >>> invoice.reload()
     >>> invoice.state
     u'draft'
