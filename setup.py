@@ -20,6 +20,7 @@ def read(fname):
         os.path.join(os.path.dirname(__file__), fname),
         'r', encoding='utf-8').read()
 
+
 def get_require_version(name):
     if minor_version % 2:
         require = '%s >= %s.%s.dev0, < %s.%s'
@@ -28,6 +29,7 @@ def get_require_version(name):
     require %= (name, major_version, minor_version,
         major_version, minor_version + 1)
     return require
+
 
 config = ConfigParser()
 config.readfp(open('tryton.cfg'))
@@ -40,7 +42,8 @@ major_version, minor_version, _ = version.split('.', 2)
 major_version = int(major_version)
 minor_version = int(minor_version)
 name = 'trytonspain_account_invoice_taxes_required'
-download_url = 'https://bitbucket.org/trytonspain/trytond-account_invoice_taxes_required'
+download_url = \
+    'https://bitbucket.org/trytonspain/trytond-account_invoice_taxes_required'
 
 requires = []
 for dep in info.get('depends', []):
@@ -70,8 +73,9 @@ setup(name=name,
         'trytond.modules.account_invoice_taxes_required.tests',
         ],
     package_data={
-        'trytond.modules.account_invoice_taxes_required': (info.get('xml', [])
-            + ['tryton.cfg', 'view/*.xml', 'locale/*.po', '*.odt',
+        'trytond.modules.account_invoice_taxes_required':
+            (info.get('xml', []) +
+                ['tryton.cfg', 'view/*.xml', 'locale/*.po', '*.odt',
                 'icons/*.svg', 'tests/*.rst']),
         },
     classifiers=[

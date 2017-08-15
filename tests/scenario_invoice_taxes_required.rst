@@ -112,7 +112,7 @@ Create invoice Without Taxes::
     >>> invoice.total_amount
     Decimal('240.00')
     >>> invoice.save()
-    >>> invoice.click('post')
+    >>> invoice.click('post')  # doctest: +IGNORE_EXCEPTION_DETAIL
     Traceback (most recent call last):
         ...
     UserError: ('UserError', (u'Missing tax in line "Test" in invoice "1".', ''))
