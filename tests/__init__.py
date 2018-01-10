@@ -2,5 +2,9 @@
 #The COPYRIGHT file at the top level of this repository contains
 #the full copyright notices and license terms.
 from .test_account_invoice_taxes_required import suite
+try:
+    from trytond.modules.account_invoice_taxes_required.tests.test_account_invoice_taxes_required import suite
+except ImportError:
+    from .test_account_invoice_taxes_required import suite
 
 __all__ = ['suite']
