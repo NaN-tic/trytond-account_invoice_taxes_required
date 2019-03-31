@@ -3,6 +3,8 @@
 # the full copyright notices and license terms.
 
 from trytond.pool import Pool, PoolMeta
+from trytond.i18n import gettext
+from trytond.exceptions import UserError
 
 __all__ = ['Invoice', 'InvoiceLine']
 
@@ -22,14 +24,6 @@ class InvoiceLine(metaclass=PoolMeta):
     __name__ = 'account.invoice.line'
 
     @classmethod
-    def __setup__(cls):
-        super(InvoiceLine, cls).__setup__()
-        cls._error_messages.update({
-                'tax_required': ('Missing tax in line "%(line)s" in invoice '
-                    '"%(invoice)s".'),
-                })
-
-    @classmethod
     def validate(cls, lines):
         super(InvoiceLine, cls).validate(lines)
         for line in lines:
@@ -40,8 +34,8 @@ class InvoiceLine(metaclass=PoolMeta):
                 self.type != 'line':
             return
         if not self.taxes:
-            self.raise_user_error('tax_required', {
-                    'line': self.rec_name,
-                    'invoice': (self.invoice.rec_name if self.invoice
-                        else '')
-                    })
+            raise UserError(gettext(
+                'account_invoice_taxes_required.tax_required',
+                    line=self.rec_name,
+                    invoice=(self.invoice.rec_name if self.invoice
+                        else '')))
