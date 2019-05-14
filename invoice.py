@@ -37,5 +37,4 @@ class InvoiceLine(metaclass=PoolMeta):
             raise UserError(gettext(
                 'account_invoice_taxes_required.tax_required',
                     line=self.rec_name,
-                    invoice=(self.invoice.rec_name if self.invoice
-                        else '')))
+                    invoice=(self.invoice.rec_name if self.invoice else '')))
