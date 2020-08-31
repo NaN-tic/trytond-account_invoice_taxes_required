@@ -30,7 +30,7 @@ class InvoiceLine(metaclass=PoolMeta):
             line.check_tax_required()
 
     def check_tax_required(self):
-        if not self.invoice or self.invoice.state in ('draft', 'cancel') or \
+        if not self.invoice or self.invoice.state in ('draft', 'cancelled') or \
                 self.type != 'line':
             return
         if not self.taxes:
