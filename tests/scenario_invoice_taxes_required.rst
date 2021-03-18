@@ -112,7 +112,7 @@ Create invoice Without Taxes::
     >>> invoice.click('post')  # doctest: +IGNORE_EXCEPTION_DETAIL
     Traceback (most recent call last):
         ...
-    UserError: ('UserError', ('Missing tax in line "Test" in invoice "1".', ''))
+    UserError: ('UserError', ('Missing tax in line "Test" in invoice ID "1".', ''))
     >>> invoice.reload()
     >>> invoice.state
     'draft'

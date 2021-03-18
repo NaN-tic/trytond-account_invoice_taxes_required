@@ -3,5 +3,5 @@ msgid ""
 msgstr "Content-Type: text/plain; charset=utf-8\n"
 
 msgctxt "model:ir.message,text:tax_required"
-msgid "Missing tax in line \"%(line)s\" in invoice \"%(invoice)s\"."
-msgstr "Falta l'impost a la linia \"%(line)s\" de la factura \"%(invoice)s\"."
+msgid "Missing tax in line \"%(line)s\" in invoice ID \"%(invoice)s\"."
+msgstr "Falta l'impost a la linia \"%(line)s\" de la factura ID \"%(invoice)s\"."
