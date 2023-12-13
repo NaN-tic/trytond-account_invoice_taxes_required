@@ -102,6 +102,8 @@ Create invoice Without Taxes::
     >>> line.description = 'Test'
     >>> line.quantity = 1
     >>> line.unit_price = Decimal(20)
+    >>> line.taxes_required == True
+    True
     >>> invoice.untaxed_amount
     Decimal('220.00')
     >>> invoice.tax_amount
