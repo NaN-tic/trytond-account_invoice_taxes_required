@@ -7,20 +7,20 @@ from trytond.exceptions import UserError
 from trytond.model import fields
 
 
-class Invoice(metaclass=PoolMeta):
-    __name__ = 'account.invoice'
+class Purchase(metaclass=PoolMeta):
+    __name__ = 'purchase.purchase'
 
     @classmethod
-    def validate(cls, invoices):
-        InvoiceLine = Pool().get('account.invoice.line')
+    def validate(cls, purchases):
+        PurchaseLine = Pool().get('purchase.line')
 
-        super().validate(invoices)
-        for invoice in invoices:
-            InvoiceLine.validate(invoice.lines)
+        super().validate(purchases)
+        for purchase in purchases:
+            PurchaseLine.validate(purchase.lines)
 
 
-class InvoiceLine(metaclass=PoolMeta):
-    __name__ = 'account.invoice.line'
+class PurchaseLine(metaclass=PoolMeta):
+    __name__ = 'purchase.line'
     taxes_required = fields.Boolean('Taxes Required', readonly=True)
 
     @classmethod
@@ -31,10 +31,7 @@ class InvoiceLine(metaclass=PoolMeta):
     def on_change_type(self):
         if self.type != 'line':
             self.taxes_required = False
-        try:
-            super().on_change_type()
-        except AttributeError:
-            pass
+        super().on_change_type()
 
     @classmethod
     def validate(cls, lines):
@@ -43,13 +40,13 @@ class InvoiceLine(metaclass=PoolMeta):
             line.check_tax_required()
 
     def check_tax_required(self):
-        if (not self.invoice
+        if (not self.purchase
                 or not self.taxes_required
-                or self.invoice.state in ('draft', 'cancelled')
+                or self.purchase.state in ('draft', 'cancelled')
                 or self.type != 'line'):
             return
         if not self.taxes:
             raise UserError(gettext(
                 'account_invoice_taxes_required.msg_missing_taxes',
                     line=self.rec_name.split(' @ ')[0],
-                    record=self.invoice.rec_name))
+                    record=self.purchase.rec_name))
