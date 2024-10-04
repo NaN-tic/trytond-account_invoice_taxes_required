@@ -11,10 +11,10 @@ class Purchase(metaclass=PoolMeta):
     __name__ = 'purchase.purchase'
 
     @classmethod
-    def validate(cls, purchases):
+    def quote(cls, purchases):
         PurchaseLine = Pool().get('purchase.line')
 
-        super().validate(purchases)
+        super().quote(purchases)
         for purchase in purchases:
             PurchaseLine.validate(purchase.lines)
 

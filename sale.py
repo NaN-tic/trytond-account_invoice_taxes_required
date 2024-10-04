@@ -11,10 +11,10 @@ class Sale(metaclass=PoolMeta):
     __name__ = 'sale.sale'
 
     @classmethod
-    def validate(cls, sales):
+    def quote(cls, sales):
         SaleLine = Pool().get('sale.line')
 
-        super().validate(sales)
+        super().quote(sales)
         for sale in sales:
             SaleLine.validate(sale.lines)
 
