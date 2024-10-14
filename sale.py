@@ -21,11 +21,15 @@ class Sale(metaclass=PoolMeta):
 
 class SaleLine(metaclass=PoolMeta):
     __name__ = 'sale.line'
-    taxes_required = fields.Boolean('Taxes Required', readonly=True)
+    taxes_required = fields.Function(fields.Boolean('Taxes Required'),
+        'on_change_with_taxes_required')
 
-    @classmethod
-    def default_taxes_required(cls):
-        return True
+    @fields.depends('type')
+    def on_change_with_taxes_required(self, name=None):
+        InvoiceLine = Pool().get('account.invoice.line')
+
+        return (InvoiceLine.default_taxes_required()
+            if self.type == 'line' else False)
 
     @fields.depends('type')
     def on_change_type(self):
