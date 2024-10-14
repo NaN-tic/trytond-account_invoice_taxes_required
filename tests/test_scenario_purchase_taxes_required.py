@@ -25,8 +25,8 @@ class Test(unittest.TestCase):
 
     def test(self):
 
-        # Install account_invoice_taxes_required Module
-        activate_modules('account_invoice_taxes_required')
+        # Install account_invoice_taxes_required and purchase Module
+        activate_modules(['account_invoice_taxes_required', 'purchase'])
 
         # Create company
         _ = create_company()
@@ -60,7 +60,7 @@ class Test(unittest.TestCase):
         account_category.account_revenue = revenue
         account_category.save()
         account_category_tax, = account_category.duplicate()
-        account_category_tax.customer_taxes.append(tax)
+        account_category_tax.supplier_taxes.append(tax)
         account_category_tax.save()
 
         # Create product
@@ -71,6 +71,7 @@ class Test(unittest.TestCase):
         template.name = 'product'
         template.default_uom = unit
         template.type = 'service'
+        template.purchasable = True
         template.list_price = Decimal('40')
         template.account_category = account_category_tax
         product, = template.products
@@ -83,43 +84,42 @@ class Test(unittest.TestCase):
         payment_term.save()
 
         # Create invoice Without Taxes
-        Invoice = Model.get('account.invoice')
-        invoice = Invoice()
-        invoice.party = party
-        invoice.payment_term = payment_term
-        line = invoice.lines.new()
+        Purchase = Model.get('purchase.purchase')
+        purchase = Purchase()
+        purchase.party = party
+        purchase.payment_term = payment_term
+        line = purchase.lines.new()
         line.product = product
         line.quantity = 5
         line.unit_price = Decimal(40)
-        line = invoice.lines.new()
-        line.account = revenue
+        line = purchase.lines.new()
         line.description = 'Test'
         line.quantity = 1
         line.unit_price = Decimal(20)
         self.assertEqual(line.taxes_required, True)
-        self.assertEqual(invoice.untaxed_amount, Decimal('220.00'))
-        self.assertEqual(invoice.tax_amount, Decimal('20.00'))
-        self.assertEqual(invoice.total_amount, Decimal('240.00'))
-        invoice.save()
+        self.assertEqual(purchase.untaxed_amount, Decimal('220.00'))
+        self.assertEqual(purchase.tax_amount, Decimal('20.00'))
+        self.assertEqual(purchase.total_amount, Decimal('240.00'))
+        purchase.save()
 
         with self.assertRaises(UserError):
-            invoice.click('post')
+            purchase.click('quote')
 
-        invoice.reload()
-        self.assertEqual(invoice.state, 'draft')
+        purchase.reload()
+        self.assertEqual(purchase.state, 'draft')
 
-        # Create invoice With Taxes
-        invoice = Invoice()
-        invoice.party = party
-        invoice.payment_term = payment_term
-        line = invoice.lines.new()
+        # Create purchase With Taxes
+        purchase = Purchase()
+        purchase.party = party
+        purchase.payment_term = payment_term
+        line = purchase.lines.new()
         line.product = product
         line.quantity = 5
         line.unit_price = Decimal(20)
-        line = invoice.lines.new()
+        line = purchase.lines.new()
         self.assertEqual(line.taxes_required, True)
         line.type = 'comment'
         self.assertEqual(line.taxes_required, False)
         line.description = 'Test'
-        invoice.click('post')
-        self.assertEqual(invoice.state, 'posted')
+        purchase.click('quote')
+        self.assertEqual(purchase.state, 'quotation')
