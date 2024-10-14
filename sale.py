@@ -7,34 +7,35 @@ from trytond.exceptions import UserError
 from trytond.model import fields
 
 
-class Invoice(metaclass=PoolMeta):
-    __name__ = 'account.invoice'
+class Sale(metaclass=PoolMeta):
+    __name__ = 'sale.sale'
 
     @classmethod
-    def validate(cls, invoices):
+    def quote(cls, sales):
+        SaleLine = Pool().get('sale.line')
+
+        super().quote(sales)
+        for sale in sales:
+            SaleLine.validate(sale.lines)
+
+
+class SaleLine(metaclass=PoolMeta):
+    __name__ = 'sale.line'
+    taxes_required = fields.Function(fields.Boolean('Taxes Required'),
+        'on_change_with_taxes_required')
+
+    @fields.depends('type')
+    def on_change_with_taxes_required(self, name=None):
         InvoiceLine = Pool().get('account.invoice.line')
 
-        super().validate(invoices)
-        for invoice in invoices:
-            InvoiceLine.validate(invoice.lines)
-
-
-class InvoiceLine(metaclass=PoolMeta):
-    __name__ = 'account.invoice.line'
-    taxes_required = fields.Boolean('Taxes Required', readonly=True)
-
-    @classmethod
-    def default_taxes_required(cls):
-        return True
+        return (InvoiceLine.default_taxes_required()
+            if self.type == 'line' else False)
 
     @fields.depends('type')
     def on_change_type(self):
         if self.type != 'line':
             self.taxes_required = False
-        try:
-            super().on_change_type()
-        except AttributeError:
-            pass
+        super().on_change_type()
 
     @classmethod
     def validate(cls, lines):
@@ -43,13 +44,13 @@ class InvoiceLine(metaclass=PoolMeta):
             line.check_tax_required()
 
     def check_tax_required(self):
-        if (not self.invoice
+        if (not self.sale
                 or not self.taxes_required
-                or self.invoice.state in ('draft', 'cancelled')
+                or self.sale.state in ('draft', 'cancelled')
                 or self.type != 'line'):
             return
         if not self.taxes:
             raise UserError(gettext(
                 'account_invoice_taxes_required.msg_missing_taxes',
                     line=self.rec_name.split(' @ ')[0],
-                    record=self.invoice.rec_name))
+                    record=self.sale.rec_name))
