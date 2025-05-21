@@ -41,7 +41,8 @@ class InvoiceLine(metaclass=PoolMeta):
     def validate(cls, lines):
         super().validate(lines)
         for line in lines:
-            if line.invoice.state in ('draft', 'cancelled'):
+            if (not line.invoice
+                    or line.invoice.state in ('draft', 'cancelled')):
                 continue
             line.check_tax_required()
 
