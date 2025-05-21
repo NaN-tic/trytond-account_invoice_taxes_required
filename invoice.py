@@ -11,12 +11,13 @@ class Invoice(metaclass=PoolMeta):
     __name__ = 'account.invoice'
 
     @classmethod
-    def validate(cls, invoices):
-        InvoiceLine = Pool().get('account.invoice.line')
-
-        super().validate(invoices)
+    def _check_taxes(cls, invoices):
+        # Replace the core tax validation with our own. Core compare taxes
+        # between deffined in the product and set in invoice line.
+        # Only need check if invoice lines ahs or not has taxes.
         for invoice in invoices:
-            InvoiceLine.validate(invoice.lines)
+            for line in invoice.lines:
+                line.check_tax_required()
 
 
 class InvoiceLine(metaclass=PoolMeta):
@@ -40,12 +41,13 @@ class InvoiceLine(metaclass=PoolMeta):
     def validate(cls, lines):
         super().validate(lines)
         for line in lines:
+            if line.invoice.state in ('draft', 'cancelled'):
+                continue
             line.check_tax_required()
 
     def check_tax_required(self):
         if (not self.invoice
                 or not self.taxes_required
-                or self.invoice.state in ('draft', 'cancelled')
                 or self.type != 'line'):
             return
         if not self.taxes:
