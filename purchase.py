@@ -3,7 +3,7 @@
 # the full copyright notices and license terms.
 from trytond.pool import Pool, PoolMeta
 from trytond.i18n import gettext
-from trytond.exceptions import UserError
+from trytond.model.exceptions import ValidationError
 from trytond.model import fields
 
 
@@ -50,7 +50,7 @@ class PurchaseLine(metaclass=PoolMeta):
                 or self.type != 'line'):
             return
         if not self.taxes:
-            raise UserError(gettext(
+            raise ValidationError(gettext(
                 'account_invoice_taxes_required.msg_missing_taxes',
                     line=self.rec_name.split(' @ ')[0],
                     record=self.purchase.rec_name))

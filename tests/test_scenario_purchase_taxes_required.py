@@ -2,7 +2,7 @@ import unittest
 from decimal import Decimal
 
 from proteus import Model
-from trytond.exceptions import UserError
+from trytond.model.exceptions import ValidationError
 from trytond.modules.account.tests.tools import (create_chart,
                                                  create_fiscalyear, create_tax,
                                                  get_accounts)
@@ -102,7 +102,7 @@ class Test(unittest.TestCase):
         self.assertEqual(purchase.total_amount, Decimal('240.00'))
         purchase.save()
 
-        with self.assertRaises(UserError):
+        with self.assertRaises(ValidationError):
             purchase.click('quote')
 
         purchase.reload()
