@@ -1,9 +1,9 @@
 # This file is part account_invoice_taxes_required module for Tryton.
 # The COPYRIGHT file at the top level of this repository contains
 # the full copyright notices and license terms.
-from trytond.pool import Pool, PoolMeta
+from trytond.pool import PoolMeta
 from trytond.i18n import gettext
-from trytond.exceptions import UserError
+from trytond.model.exceptions import ValidationError
 from trytond.model import fields
 
 
@@ -52,7 +52,7 @@ class InvoiceLine(metaclass=PoolMeta):
                 or self.type != 'line'):
             return
         if not self.taxes:
-            raise UserError(gettext(
+            raise ValidationError(gettext(
                 'account_invoice_taxes_required.msg_missing_taxes',
                     line=self.rec_name.split(' @ ')[0],
                     record=self.invoice.rec_name))
