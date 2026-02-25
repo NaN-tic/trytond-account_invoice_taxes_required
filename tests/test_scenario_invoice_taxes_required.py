@@ -84,7 +84,7 @@ class Test(unittest.TestCase):
 
         # Create invoice Without Taxes
         Invoice = Model.get('account.invoice')
-        invoice = Invoice()
+        invoice = Invoice(type='out')
         invoice.party = party
         invoice.payment_term = payment_term
         line = invoice.lines.new()
@@ -109,7 +109,7 @@ class Test(unittest.TestCase):
         self.assertEqual(invoice.state, 'draft')
 
         # Create invoice With Taxes
-        invoice = Invoice()
+        invoice = Invoice(type='out')
         invoice.party = party
         invoice.payment_term = payment_term
         line = invoice.lines.new()
