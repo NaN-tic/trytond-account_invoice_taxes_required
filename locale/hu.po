@@ -1,0 +1,25 @@
+#
+msgid ""
+msgstr ""
+"Language: hu\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#, python-format
+msgctxt "model:ir.message,text:msg_missing_taxes"
+msgid "Missing tax in line \"%(line)s\" in \"%(record)s\"."
+msgstr "A(z) „%(record)s” rekord „%(line)s” sorából hiányzik az adó."
+
+msgctxt "field:account.invoice.line,taxes_required:"
+msgid "Taxes Required"
+msgstr "Adók megadása kötelező"
+
+msgctxt "field:purchase.line,taxes_required:"
+msgid "Taxes Required"
+msgstr "Adók megadása kötelező"
+
+msgctxt "field:sale.line,taxes_required:"
+msgid "Taxes Required"
+msgstr "Adók megadása kötelező"
